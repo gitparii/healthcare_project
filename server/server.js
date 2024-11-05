@@ -6,6 +6,8 @@ const errorHandler = require("./middlewares/errorhandler");
 const cors= require("cors");
 const hbs = require("hbs");
 const path = require("path");
+const multer = require('multer');
+const upload = multer({dest: 'uploads/'});
 
 ///ENV FILE CONFIG
 
@@ -21,6 +23,7 @@ app.use(cors());
 
 // Route for user registration and authetication
 app.use("/api/",require("./routes/userRoutes"));
+app.use("/api/details",require("./routes/doctorDetails"));
 
 //error handling middleware
 
@@ -48,6 +51,15 @@ app.get("/allusers",(req,res)=>{
             {id:1,username:"anket",age:24}
         ]})
 })
+
+app.post('/profile', upload.single('avatar'), function (req, res, next) {
+
+    console.log(req.body);
+    console.log(req.file);
+    return res.redirect("/home")
+    // req.file is the `avatar` file
+    // req.body will hold the text fields, if there were any
+  })
 
 hbs.registerPartials(path.join(__dirname, '/views/partials'));
 
